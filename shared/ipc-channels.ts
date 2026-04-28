@@ -1,0 +1,59 @@
+export const IPC = {
+  OBS: {
+    CONNECT:          'obs:connect',
+    DISCONNECT:       'obs:disconnect',
+    SWITCH_SCENE:     'obs:switch-scene',
+    GET_SCENES:       'obs:get-scenes',
+    GET_STATUS:       'obs:get-status',
+    START_STREAM:     'obs:start-stream',
+    STOP_STREAM:      'obs:stop-stream',
+    ON_SCENE_CHANGED: 'obs:scene-changed',
+    ON_STREAM_STATE:  'obs:stream-state',
+    ON_CONNECTED:     'obs:connected',
+    ON_DISCONNECTED:  'obs:disconnected',
+  },
+  VLC: {
+    PLAY:        'vlc:play',
+    STOP:        'vlc:stop',
+    GET_SCREENS: 'vlc:get-screens',
+  },
+  DOWNLOADER: {
+    START:       'dl:start',
+    CANCEL:      'dl:cancel',
+    LIST_QUEUE:  'dl:list-queue',
+    ON_PROGRESS: 'dl:progress',
+    ON_COMPLETE: 'dl:complete',
+    ON_ERROR:    'dl:error',
+  },
+  SCRAPER: {
+    FETCH: 'scraper:fetch',
+  },
+  AI: {
+    SEND_MESSAGE: 'ai:send',
+    SET_API_KEY:  'ai:set-key',
+    KEY_STATUS:   'ai:key-status',
+    SET_MODEL:    'ai:set-model',
+    CLEAR_HISTORY:'ai:clear-history',
+  },
+  FILES: {
+    OPEN_DIALOG: 'files:open-dialog',
+    OPEN_PATH:   'files:open-path',
+    REVEAL:      'files:reveal',
+  },
+  LOGGER: {
+    LOG: 'logger:log',
+  },
+  CONFIG: {
+    GET:     'config:get',
+    SET:     'config:set',
+    GET_ALL: 'config:get-all',
+    RESET:   'config:reset',
+  },
+  APP: {
+    VERSION:  'app:version',
+    MONITORS: 'app:monitors',
+    PANIC:    'app:panic',
+    ON_UPDATE_AVAILABLE: 'app:update-available',
+    ON_UPDATE_READY:     'app:update-ready',
+  },
+} as const
