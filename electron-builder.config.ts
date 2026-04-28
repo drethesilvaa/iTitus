@@ -9,8 +9,7 @@ const config: Configuration = {
     buildResources: 'assets',
   },
   files: [
-    'dist-electron/**/*',
-    'dist/**/*',
+    'out/**/*',
   ],
   extraResources: [
     { from: 'resources/yt-dlp.exe',  to: 'yt-dlp.exe'  },

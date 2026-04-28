@@ -141,3 +141,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Large binaries — download manually (see NEXT_STEPS.md)
+resources/ffmpeg.exe

@@ -18,17 +18,15 @@ class ScraperService {
 
     const resources: ScraperResource[] = []
 
-    // Parse table rows — selectors validated against recursos.adventistas.org.pt structure
+    // Page layout: col 0 = title (plain text), col 1 = size, col 2 = "Descarregar" link
     $('table tr, .wp-block-table tr').each((_, row) => {
       const cells = $(row).find('td')
-      if (cells.length < 1) return
+      if (cells.length < 2) return
 
-      const link = cells.eq(0).find('a[href]')
-      const href = link.attr('href') ?? ''
-      if (!href) return
-
-      const title = link.attr('title') ?? link.text().trim()
+      const title = cells.eq(0).text().trim()
       const sizeLabel = cells.eq(1).text().trim()
+      const link = cells.last().find('a[href]')
+      const href = link.attr('href') ?? ''
 
       if (title && href) {
         resources.push({ title, url: href, sizeLabel: sizeLabel || undefined })
