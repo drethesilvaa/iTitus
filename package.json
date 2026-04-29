@@ -1,7 +1,7 @@
 {
   "name": "iasd-paivas-multimedia",
   "version": "1.0.0",
-  "description": "Assistente Multimedia IASD Paivas",
+  "description": "iTitus IASD Paivas",
   "main": "out/main/main.mjs",
   "scripts": {
     "dev": "electron-vite dev",

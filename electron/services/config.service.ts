@@ -17,12 +17,14 @@ const defaults: AppConfig = {
   hymnBasePath:     '',
   hymnExtension:    'mp4',
   theme:            'light',
+  onboardingDone:   false,
   scraperBoletimUrl:  'https://recursos.adventistas.org.pt/escolasabatina/videos/',
   scraperMordomiaUrl: 'https://recursos.adventistas.org.pt/mordomia/videos/',
   scenes: {
     camera:        'Câmara',
     screenShare:   'Partilha Ecrã',
     screenWithCam: 'Ecrã + Câmara',
+    standby:       'StandBy',
   },
   scraperCache: {
     boletim:  null,

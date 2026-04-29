@@ -39,12 +39,14 @@ export interface AppConfig {
   hymnBasePath: string
   hymnExtension: string
   theme: 'light' | 'dark'
+  onboardingDone: boolean
   scraperBoletimUrl: string
   scraperMordomiaUrl: string
   scenes: {
     camera: string
     screenShare: string
     screenWithCam: string
+    standby: string
   }
   scraperCache: {
     boletim: { items: ScraperResource[]; fetchedAt: number } | null

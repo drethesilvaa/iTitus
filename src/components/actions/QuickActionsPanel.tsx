@@ -8,7 +8,7 @@ export function QuickActionsPanel() {
   const [hymnNumber, setHymnNumber] = useState('')
   const [hymnLoading, setHymnLoading] = useState(false)
 
-  const scenes = config?.scenes ?? { camera: 'Câmara', screenShare: 'Partilha Ecrã', screenWithCam: 'Ecrã + Câmara' }
+  const scenes = config?.scenes ?? { camera: 'Câmara', screenShare: 'Partilha Ecrã', screenWithCam: 'Ecrã + Câmara', standby: 'StandBy' }
 
   const switchScene = (key: keyof typeof scenes) => {
     window.electronAPI.obs.switchScene(scenes[key])
@@ -34,9 +34,9 @@ export function QuickActionsPanel() {
     <div className="h-full overflow-y-auto p-4 space-y-6">
       {/* Scene buttons */}
       <section>
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Cenas OBS</h3>
+        <h3 className="text-xs font-semibold text-app-mid uppercase tracking-wider mb-3">Cenas OBS</h3>
         {!isConnected && (
-          <p className="text-xs text-gray-400 mb-2">OBS não ligado</p>
+          <p className="text-xs text-app-low mb-2">OBS não ligado</p>
         )}
         <div className="grid grid-cols-1 gap-2">
           <SceneBtn
@@ -63,12 +63,20 @@ export function QuickActionsPanel() {
             disabled={!isConnected}
             onClick={() => switchScene('screenWithCam')}
           />
+          <SceneBtn
+            label="StandBy"
+            desc="Pausa, intervalo"
+            icon="⏸"
+            active={currentScene === scenes.standby}
+            disabled={!isConnected}
+            onClick={() => switchScene('standby')}
+          />
         </div>
       </section>
 
       {/* Hymn selector */}
       <section>
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Abrir Hino</h3>
+        <h3 className="text-xs font-semibold text-app-mid uppercase tracking-wider mb-3">Abrir Hino</h3>
         <div className="flex gap-2">
           <input
             type="number"
@@ -78,12 +86,12 @@ export function QuickActionsPanel() {
             onChange={(e) => setHymnNumber(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && openHymn()}
             placeholder="Nº do hino"
-            className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-3 py-2 border border-app-border bg-app-surface text-app-high rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-app-accent/50 placeholder:text-app-low"
           />
           <button
             onClick={openHymn}
             disabled={hymnLoading || !hymnNumber}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
           >
             {hymnLoading ? '...' : 'Abrir'}
           </button>
@@ -91,7 +99,7 @@ export function QuickActionsPanel() {
         <div className="mt-2 flex gap-2">
           <button
             onClick={() => window.electronAPI.vlc.stop()}
-            className="px-3 py-1.5 text-xs rounded border border-red-200 text-red-600 hover:bg-red-50"
+            className="px-3 py-1.5 text-xs rounded border border-red-800 text-red-400 hover:bg-red-900/20 transition-colors"
           >
             Parar VLC
           </button>
@@ -100,12 +108,12 @@ export function QuickActionsPanel() {
 
       {/* Stream control */}
       <section>
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Stream</h3>
+        <h3 className="text-xs font-semibold text-app-mid uppercase tracking-wider mb-3">Stream</h3>
         {isStreaming ? (
           <button
             onClick={() => window.electronAPI.obs.stopStream()}
             disabled={!isConnected}
-            className="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 disabled:opacity-50 transition-colors"
+            className="w-full px-4 py-2.5 bg-red-600 text-app-high rounded-lg text-sm font-semibold hover:bg-red-700 disabled:opacity-50 transition-colors"
           >
             Parar Stream
           </button>
@@ -113,7 +121,7 @@ export function QuickActionsPanel() {
           <button
             onClick={() => window.electronAPI.obs.startStream()}
             disabled={!isConnected}
-            className="w-full px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="w-full px-4 py-2.5 bg-green-700 text-app-high rounded-lg text-sm font-semibold hover:bg-green-600 disabled:opacity-50 transition-colors"
           >
             Iniciar Stream
           </button>
@@ -122,7 +130,7 @@ export function QuickActionsPanel() {
 
       {/* Open file */}
       <section>
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Abrir Ficheiro</h3>
+        <h3 className="text-xs font-semibold text-app-mid uppercase tracking-wider mb-3">Abrir Ficheiro</h3>
         <button
           onClick={async () => {
             const file = await window.electronAPI.files.openDialog({
@@ -134,7 +142,7 @@ export function QuickActionsPanel() {
               await window.electronAPI.vlc.play(file, cfg.vlcScreenIndex)
             }
           }}
-          className="w-full px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+          className="w-full px-4 py-2.5 border border-app-border text-app-mid rounded-lg text-sm hover:bg-app-surface transition-colors"
         >
           Selecionar e reproduzir...
         </button>
@@ -159,16 +167,16 @@ function SceneBtn({ label, desc, icon, active, disabled, onClick }: SceneBtnProp
       disabled={disabled}
       className={`flex items-center gap-3 px-4 py-3 rounded-lg border text-left transition-all w-full
         ${active
-          ? 'border-blue-400 bg-blue-50 shadow-sm'
-          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+          ? 'border-app-accent bg-app-accent/10'
+          : 'border-app-border hover:bg-app-surface'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
     >
       <span className="text-xl">{icon}</span>
       <div>
-        <div className={`text-sm font-medium ${active ? 'text-blue-700' : 'text-gray-800'}`}>{label}</div>
-        <div className="text-xs text-gray-400">{desc}</div>
+        <div className={`text-sm font-medium ${active ? 'text-app-accent' : 'text-app-high'}`}>{label}</div>
+        <div className="text-xs text-app-low">{desc}</div>
       </div>
-      {active && <span className="ml-auto text-blue-500 text-xs font-semibold">ATIVO</span>}
+      {active && <span className="ml-auto text-app-accent text-xs font-semibold">ATIVO</span>}
     </button>
   )
 }

@@ -35,7 +35,8 @@ function createWindow(): void {
     height: 800,
     minWidth: 1024,
     minHeight: 700,
-    title: 'Assistente Multimedia — IASD Paivas',
+    title: 'iTitus — IASD Paivas',
+    icon: path.join(process.cwd(), 'assets/icon.ico'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

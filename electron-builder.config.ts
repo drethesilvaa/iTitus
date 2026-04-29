@@ -2,15 +2,14 @@ import type { Configuration } from 'electron-builder'
 
 const config: Configuration = {
   appId: 'pt.adventistas.paivas.multimedia',
-  productName: 'Assistente Multimedia IASD Paivas',
+  productName: 'iTitus IASD Paivas',
   copyright: 'IASD Paivas',
   directories: {
     output: 'release',
     buildResources: 'assets',
   },
   files: [
-    'dist-electron/**/*',
-    'dist/**/*',
+    'out/**/*',
   ],
   extraResources: [
     { from: 'resources/yt-dlp.exe',  to: 'yt-dlp.exe'  },

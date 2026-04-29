@@ -11,14 +11,14 @@ export function RunbookPanel() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-app-border">
         <div>
-          <h2 className="font-semibold text-gray-800">Programa do Culto</h2>
-          <p className="text-xs text-gray-500">{done}/{moments.length} momentos concluídos</p>
+          <h2 className="font-semibold text-app-high">Programa do Culto</h2>
+          <p className="text-xs text-app-low">{done}/{moments.length} momentos concluídos</p>
         </div>
         <button
           onClick={() => { if (confirm('Reiniciar programa?')) resetRunbook() }}
-          className="px-3 py-1.5 text-xs rounded border border-gray-200 hover:bg-gray-50 text-gray-600"
+          className="px-3 py-1.5 text-xs rounded border border-app-border hover:bg-app-surface text-app-mid transition-colors"
         >
           Reiniciar
         </button>
@@ -45,7 +45,7 @@ export function RunbookPanel() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{title}</h3>
+      <h3 className="text-xs font-semibold text-app-low uppercase tracking-wider mb-2">{title}</h3>
       <div className="space-y-2">{children}</div>
     </div>
   )

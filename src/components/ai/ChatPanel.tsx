@@ -18,16 +18,16 @@ export function ChatPanel() {
   }
 
   return (
-    <div className="flex flex-col h-full border-l border-gray-200 bg-gray-50">
+    <div className="flex flex-col h-full border-l border-app-border bg-app-base">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-app-border bg-app-surface">
         <div>
-          <h2 className="font-semibold text-gray-800 text-sm">Assistente AI</h2>
-          <p className="text-xs text-gray-400">Fala em português</p>
+          <h2 className="font-semibold text-app-high text-sm">iTitus AI</h2>
+          <p className="text-xs text-app-low">Fala em português</p>
         </div>
         <button
           onClick={clearChat}
-          className="text-xs text-gray-400 hover:text-gray-600"
+          className="text-xs text-app-low hover:text-app-mid transition-colors"
           title="Limpar conversa"
         >
           Limpar
@@ -37,7 +37,7 @@ export function ChatPanel() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 text-xs mt-8">
+          <div className="text-center text-app-low text-xs mt-8">
             <p className="text-2xl mb-2">💬</p>
             <p>Pede ajuda ao assistente.</p>
             <p className="mt-1">Ex: "Muda para câmara" ou "Qual é o hino 245?"</p>
@@ -52,16 +52,16 @@ export function ChatPanel() {
             <div
               className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
                 msg.role === 'user'
-                  ? 'bg-blue-600 text-white rounded-br-sm'
+                  ? 'bg-app-accent text-app-deep rounded-br-sm'
                   : msg.isError
-                    ? 'bg-red-50 text-red-700 border border-red-200 rounded-bl-sm'
-                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm'
+                    ? 'bg-red-900/30 text-red-400 border border-red-800 rounded-bl-sm'
+                    : 'bg-app-surface text-app-high border border-app-border rounded-bl-sm'
               }`}
             >
               <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
               {msg.actionTaken && (
                 <span className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full ${
-                  msg.role === 'user' ? 'bg-blue-500 text-blue-100' : 'bg-gray-100 text-gray-500'
+                  msg.role === 'user' ? 'bg-app-accent-dim text-app-deep' : 'bg-app-border text-app-mid'
                 }`}>
                   ⚡ {msg.actionTaken}
                 </span>
@@ -72,11 +72,11 @@ export function ChatPanel() {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 rounded-lg rounded-bl-sm px-3 py-2 shadow-sm">
+            <div className="bg-app-surface border border-app-border rounded-lg rounded-bl-sm px-3 py-2">
               <div className="flex gap-1 items-center h-4">
-                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-app-mid rounded-full animate-bounce [animation-delay:-0.3s]" />
+                <span className="w-1.5 h-1.5 bg-app-mid rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1.5 h-1.5 bg-app-mid rounded-full animate-bounce" />
               </div>
             </div>
           </div>
@@ -86,7 +86,7 @@ export function ChatPanel() {
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-200 bg-white">
+      <div className="p-3 border-t border-app-border bg-app-surface">
         <div className="flex gap-2">
           <textarea
             value={input}
@@ -96,12 +96,12 @@ export function ChatPanel() {
             }}
             placeholder="Escreve aqui... (Enter para enviar)"
             rows={2}
-            className="flex-1 resize-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 resize-none px-3 py-2 border border-app-border bg-app-base text-app-high rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-app-accent/50 placeholder:text-app-low"
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors self-end"
+            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg disabled:opacity-50 transition-colors self-end"
           >
             ↑
           </button>
