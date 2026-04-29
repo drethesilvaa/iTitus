@@ -6,21 +6,24 @@ import { QuickActionsPanel } from './components/actions/QuickActionsPanel'
 import { DownloaderPanel } from './components/actions/DownloaderPanel'
 import { SettingsPanel } from './components/settings/SettingsPanel'
 import { ChatPanel } from './components/ai/ChatPanel'
+import { InstrucoesPanel } from './components/instrucoes/InstrucoesPanel'
+import { OnboardingOverlay } from './components/onboarding/OnboardingOverlay'
 import { useOBS } from './hooks/useOBS'
 import { useSettingsStore } from './store/settings.store'
 
-export type TabId = 'culto' | 'acoes' | 'downloads' | 'config'
+export type TabId = 'culto' | 'acoes' | 'downloads' | 'instrucoes' | 'config'
 
 const PANELS: Record<TabId, React.ReactNode> = {
-  culto:     <RunbookPanel />,
-  acoes:     <QuickActionsPanel />,
-  downloads: <DownloaderPanel />,
-  config:    <SettingsPanel />,
+  culto:      <RunbookPanel />,
+  acoes:      <QuickActionsPanel />,
+  downloads:  <DownloaderPanel />,
+  instrucoes: <InstrucoesPanel />,
+  config:     <SettingsPanel />,
 }
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>('culto')
-  const { loadConfig } = useSettingsStore()
+  const { loadConfig, config } = useSettingsStore()
 
   // Initialize OBS listeners
   useOBS()
@@ -44,7 +47,9 @@ export default function App() {
   }, [handleKeyDown])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 font-sans">
+    <>
+    {config && !config.onboardingDone && <OnboardingOverlay />}
+    <div className="flex h-screen overflow-hidden bg-app-base font-sans">
       {/* Sidebar */}
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -61,5 +66,6 @@ export default function App() {
         <ChatPanel />
       </div>
     </div>
+    </>
   )
 }

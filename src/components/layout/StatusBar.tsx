@@ -11,13 +11,13 @@ export function StatusBar() {
   }, [])
 
   return (
-    <div className="flex items-center gap-4 px-4 py-2 bg-gray-900 text-sm text-white select-none border-b border-gray-700">
+    <div className="flex items-center gap-4 px-4 py-2 bg-app-deep text-sm text-app-high select-none border-b border-app-border">
       {/* OBS status */}
       <div className="flex items-center gap-2">
         <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-500'}`} />
-        <span className="text-gray-300">OBS</span>
+        <span className="text-app-mid">OBS</span>
         {isConnected && currentScene && (
-          <span className="text-gray-400">· {currentScene}</span>
+          <span className="text-app-low">· {currentScene}</span>
         )}
         {!isConnected && (
           <span className="text-red-400">Desligado</span>
@@ -35,7 +35,7 @@ export function StatusBar() {
       <div className="flex-1" />
 
       {/* Clock */}
-      <span className="text-gray-300 font-mono tabular-nums">
+      <span className="text-app-mid font-mono tabular-nums">
         {time.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
       </span>
     </div>

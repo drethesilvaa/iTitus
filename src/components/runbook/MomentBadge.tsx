@@ -1,9 +1,9 @@
 import type { MomentStatus, MomentCategory } from '../../types/runbook.types'
 
 const STATUS_STYLES: Record<MomentStatus, string> = {
-  pending: 'bg-gray-100 text-gray-500',
-  active:  'bg-blue-100 text-blue-700 font-semibold',
-  done:    'bg-green-100 text-green-700',
+  pending: 'bg-app-border text-app-low',
+  active:  'bg-app-accent/20 text-app-accent font-semibold',
+  done:    'bg-green-900/30 text-green-400',
 }
 
 const STATUS_LABELS: Record<MomentStatus, string> = {
@@ -13,8 +13,8 @@ const STATUS_LABELS: Record<MomentStatus, string> = {
 }
 
 const CATEGORY_STYLES: Record<MomentCategory, string> = {
-  escola: 'bg-purple-100 text-purple-700',
-  culto:  'bg-blue-100 text-blue-700',
+  escola: 'bg-purple-900/30 text-purple-400',
+  culto:  'bg-app-accent/20 text-app-accent',
 }
 
 export function StatusBadge({ status }: { status: MomentStatus }) {

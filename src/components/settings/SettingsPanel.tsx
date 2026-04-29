@@ -4,30 +4,82 @@ import { useOBS } from '../../hooks/useOBS'
 
 type SettingsTab = 'obs' | 'paths' | 'ai' | 'scraper'
 
+function LoginGate({ onUnlock }: { onUnlock: () => void }) {
+  const [user, setUser] = useState('')
+  const [psw, setPsw] = useState('')
+  const [error, setError] = useState(false)
+
+  const attempt = () => {
+    if (user === 'admin' && psw === 'admin') {
+      onUnlock()
+    } else {
+      setError(true)
+      setPsw('')
+    }
+  }
+
+  return (
+    <div className="h-full flex items-center justify-center bg-app-base">
+      <div className="bg-app-surface border border-app-border rounded-xl p-8 w-72 space-y-4">
+        <div className="text-center">
+          <h2 className="font-bold text-app-high text-base">iTitus AI</h2>
+          <p className="text-app-low text-xs mt-1">Acesso restrito</p>
+        </div>
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="Utilizador"
+            value={user}
+            onChange={e => { setUser(e.target.value); setError(false) }}
+            onKeyDown={e => e.key === 'Enter' && attempt()}
+            className={inputClass}
+          />
+          <input
+            type="password"
+            placeholder="Palavra-passe"
+            value={psw}
+            onChange={e => { setPsw(e.target.value); setError(false) }}
+            onKeyDown={e => e.key === 'Enter' && attempt()}
+            className={inputClass}
+          />
+          {error && <p className="text-red-400 text-xs">Credenciais inválidas</p>}
+          <button
+            onClick={attempt}
+            className="w-full py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium transition-colors"
+          >
+            Entrar
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function SettingsPanel() {
   const [tab, setTab] = useState<SettingsTab>('obs')
+  const [aiUnlocked, setAiUnlocked] = useState(false)
   const { config, updateConfig } = useSettingsStore()
   const obs = useOBS()
 
-  if (!config) return <div className="p-4 text-gray-400 text-sm">A carregar definições...</div>
+  if (!config) return <div className="p-4 text-app-low text-sm">A carregar definições...</div>
 
   const tabs: { id: SettingsTab; label: string }[] = [
     { id: 'obs',    label: 'OBS' },
     { id: 'paths',  label: 'Caminhos' },
-    { id: 'ai',     label: 'Assistente AI' },
+    { id: 'ai',     label: 'iTitus AI' },
     { id: 'scraper',label: 'Recursos Web' },
   ]
 
   return (
     <div className="h-full flex flex-col">
       {/* Tab nav */}
-      <div className="flex border-b border-gray-200 px-4 pt-4">
+      <div className="flex border-b border-app-border px-4 pt-4">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
-              tab === t.id ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'
+              tab === t.id ? 'border-app-accent text-app-accent' : 'border-transparent text-app-low hover:text-app-mid'
             }`}
           >
             {t.label}
@@ -38,7 +90,7 @@ export function SettingsPanel() {
       <div className="flex-1 overflow-y-auto p-4">
         {tab === 'obs'    && <OBSSettings config={config} update={updateConfig} obs={obs} />}
         {tab === 'paths'  && <PathsSettings config={config} update={updateConfig} />}
-        {tab === 'ai'     && <AISettings config={config} update={updateConfig} />}
+        {tab === 'ai'     && (aiUnlocked ? <AISettings config={config} update={updateConfig} /> : <LoginGate onUnlock={() => setAiUnlocked(true)} />)}
         {tab === 'scraper'&& <ScraperSettings config={config} update={updateConfig} />}
       </div>
     </div>
@@ -65,22 +117,12 @@ function OBSSettings({ config, update, obs }: any) {
 
   return (
     <div className="space-y-4 max-w-md">
-      <h3 className="font-semibold text-gray-800">Ligação ao OBS</h3>
+      <h3 className="font-semibold text-app-high">Ligação ao OBS</h3>
       <Field label="Host">
-        <input
-          type="text"
-          value={config.obsHost}
-          onChange={e => update('obsHost', e.target.value)}
-          className={inputClass}
-        />
+        <input type="text" value={config.obsHost} onChange={e => update('obsHost', e.target.value)} className={inputClass} />
       </Field>
       <Field label="Porta">
-        <input
-          type="number"
-          value={config.obsPort}
-          onChange={e => update('obsPort', parseInt(e.target.value))}
-          className={inputClass}
-        />
+        <input type="number" value={config.obsPort} onChange={e => update('obsPort', parseInt(e.target.value))} className={inputClass} />
       </Field>
       <Field label="Palavra-passe">
         <input
@@ -96,7 +138,7 @@ function OBSSettings({ config, update, obs }: any) {
           type="checkbox"
           checked={config.obsAutoConnect}
           onChange={e => update('obsAutoConnect', e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-blue-600"
+          className="h-4 w-4 rounded border-app-border text-app-accent"
         />
       </Field>
 
@@ -104,38 +146,26 @@ function OBSSettings({ config, update, obs }: any) {
         <button
           onClick={test}
           disabled={testing}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
         >
           {testing ? 'A ligar...' : 'Testar ligação'}
         </button>
-        {testResult === 'success' && <p className="text-green-600 text-xs">Ligação bem-sucedida!</p>}
-        {testResult && testResult !== 'success' && <p className="text-red-500 text-xs">{testResult}</p>}
+        {testResult === 'success' && <p className="text-green-400 text-xs">Ligação bem-sucedida!</p>}
+        {testResult && testResult !== 'success' && <p className="text-red-400 text-xs">{testResult}</p>}
       </div>
 
-      <h3 className="font-semibold text-gray-800 pt-4">Nomes das Cenas</h3>
+      <h3 className="font-semibold text-app-high pt-4">Nomes das Cenas</h3>
       <Field label="Câmara">
-        <input
-          type="text"
-          value={config.scenes.camera}
-          onChange={e => update('scenes', { ...config.scenes, camera: e.target.value })}
-          className={inputClass}
-        />
+        <input type="text" value={config.scenes.camera} onChange={e => update('scenes', { ...config.scenes, camera: e.target.value })} className={inputClass} />
       </Field>
       <Field label="Partilha de Ecrã">
-        <input
-          type="text"
-          value={config.scenes.screenShare}
-          onChange={e => update('scenes', { ...config.scenes, screenShare: e.target.value })}
-          className={inputClass}
-        />
+        <input type="text" value={config.scenes.screenShare} onChange={e => update('scenes', { ...config.scenes, screenShare: e.target.value })} className={inputClass} />
       </Field>
       <Field label="Ecrã + Câmara">
-        <input
-          type="text"
-          value={config.scenes.screenWithCam}
-          onChange={e => update('scenes', { ...config.scenes, screenWithCam: e.target.value })}
-          className={inputClass}
-        />
+        <input type="text" value={config.scenes.screenWithCam} onChange={e => update('scenes', { ...config.scenes, screenWithCam: e.target.value })} className={inputClass} />
+      </Field>
+      <Field label="StandBy">
+        <input type="text" value={config.scenes.standby} onChange={e => update('scenes', { ...config.scenes, standby: e.target.value })} className={inputClass} />
       </Field>
     </div>
   )
@@ -150,26 +180,17 @@ function PathsSettings({ config, update }: any) {
 
   return (
     <div className="space-y-4 max-w-md">
-      <h3 className="font-semibold text-gray-800">Caminhos do Sistema</h3>
+      <h3 className="font-semibold text-app-high">Caminhos do Sistema</h3>
 
       <Field label="Pasta de Hinos">
         <div className="flex gap-2">
           <input type="text" value={config.hymnBasePath} readOnly className={`${inputClass} flex-1`} />
-          <button
-            onClick={() => pick('hymnBasePath', [{ name: 'Pastas', extensions: ['*'] }])}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
-          >
-            Escolher
-          </button>
+          <button onClick={() => pick('hymnBasePath', [{ name: 'Pastas', extensions: ['*'] }])} className={pickerClass}>Escolher</button>
         </div>
       </Field>
 
       <Field label="Extensão dos Hinos">
-        <select
-          value={config.hymnExtension}
-          onChange={e => update('hymnExtension', e.target.value)}
-          className={inputClass}
-        >
+        <select value={config.hymnExtension} onChange={e => update('hymnExtension', e.target.value)} className={inputClass}>
           {['mp4', 'mkv', 'avi', 'mov'].map(ext => (
             <option key={ext} value={ext}>.{ext}</option>
           ))}
@@ -179,33 +200,19 @@ function PathsSettings({ config, update }: any) {
       <Field label="Pasta de Downloads">
         <div className="flex gap-2">
           <input type="text" value={config.downloadPath} readOnly className={`${inputClass} flex-1`} />
-          <button
-            onClick={() => pick('downloadPath', [{ name: 'Pastas', extensions: ['*'] }])}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
-          >
-            Escolher
-          </button>
+          <button onClick={() => pick('downloadPath', [{ name: 'Pastas', extensions: ['*'] }])} className={pickerClass}>Escolher</button>
         </div>
       </Field>
 
       <Field label="Caminho do VLC">
         <div className="flex gap-2">
           <input type="text" value={config.vlcPath} readOnly className={`${inputClass} flex-1`} />
-          <button
-            onClick={() => pick('vlcPath', [{ name: 'Executáveis', extensions: ['exe'] }])}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
-          >
-            Escolher
-          </button>
+          <button onClick={() => pick('vlcPath', [{ name: 'Executáveis', extensions: ['exe'] }])} className={pickerClass}>Escolher</button>
         </div>
       </Field>
 
       <Field label="Monitor para VLC">
-        <select
-          value={config.vlcScreenIndex}
-          onChange={e => update('vlcScreenIndex', parseInt(e.target.value))}
-          className={inputClass}
-        >
+        <select value={config.vlcScreenIndex} onChange={e => update('vlcScreenIndex', parseInt(e.target.value))} className={inputClass}>
           {[0, 1, 2].map(i => (
             <option key={i} value={i}>Monitor {i + 1}</option>
           ))}
@@ -235,7 +242,7 @@ function AISettings({ config, update }: any) {
 
   return (
     <div className="space-y-4 max-w-md">
-      <h3 className="font-semibold text-gray-800">OpenRouter AI</h3>
+      <h3 className="font-semibold text-app-high">OpenRouter AI</h3>
 
       <Field label="Chave API">
         <div className="flex gap-2">
@@ -249,12 +256,12 @@ function AISettings({ config, update }: any) {
           <button
             onClick={saveKey}
             disabled={!apiKey || saving}
-            className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50"
+            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm disabled:opacity-50 transition-colors"
           >
             {saving ? '...' : 'Guardar'}
           </button>
         </div>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-app-low mt-1">
           {keySet ? '✓ Chave API configurada' : 'Sem chave API — o assistente não funcionará'}
         </p>
       </Field>
@@ -279,37 +286,28 @@ function AISettings({ config, update }: any) {
 function ScraperSettings({ config, update }: any) {
   return (
     <div className="space-y-4 max-w-md">
-      <h3 className="font-semibold text-gray-800">URLs dos Recursos</h3>
-      <p className="text-xs text-gray-500">Actualizar por trimestre</p>
+      <h3 className="font-semibold text-app-high">URLs dos Recursos</h3>
+      <p className="text-xs text-app-low">Actualizar por trimestre</p>
 
       <Field label="Boletim Missionário">
-        <input
-          type="url"
-          value={config.scraperBoletimUrl}
-          onChange={e => update('scraperBoletimUrl', e.target.value)}
-          className={inputClass}
-        />
+        <input type="url" value={config.scraperBoletimUrl} onChange={e => update('scraperBoletimUrl', e.target.value)} className={inputClass} />
       </Field>
 
       <Field label="Vídeo Mordomia">
-        <input
-          type="url"
-          value={config.scraperMordomiaUrl}
-          onChange={e => update('scraperMordomiaUrl', e.target.value)}
-          className={inputClass}
-        />
+        <input type="url" value={config.scraperMordomiaUrl} onChange={e => update('scraperMordomiaUrl', e.target.value)} className={inputClass} />
       </Field>
     </div>
   )
 }
 
 // ── Helpers ──────────────────────────────────────────────────
-const inputClass = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+const inputClass = 'w-full px-3 py-2 border border-app-border bg-app-surface text-app-high rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-app-accent/50 placeholder:text-app-low'
+const pickerClass = 'px-3 py-2 border border-app-border rounded-lg text-sm text-app-mid hover:bg-app-surface transition-colors'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-app-mid mb-1">{label}</label>
       {children}
     </div>
   )

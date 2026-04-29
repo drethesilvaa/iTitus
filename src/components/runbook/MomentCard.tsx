@@ -20,10 +20,10 @@ export function MomentCard({ moment, isActive }: MomentCardProps) {
     <div
       className={`rounded-lg border p-3 transition-all ${
         isActive
-          ? 'border-blue-400 bg-blue-50 shadow-md'
+          ? 'border-app-accent bg-app-accent/10 shadow-md'
           : moment.status === 'done'
-            ? 'border-green-200 bg-green-50 opacity-70'
-            : 'border-gray-200 bg-white hover:border-gray-300'
+            ? 'border-green-800 bg-green-900/20 opacity-70'
+            : 'border-app-border bg-app-surface'
       }`}
     >
       <div className="flex items-center gap-2">
@@ -32,13 +32,13 @@ export function MomentCard({ moment, isActive }: MomentCardProps) {
           type="checkbox"
           checked={moment.status === 'done'}
           onChange={(e) => markStatus(moment.id, e.target.checked ? 'done' : 'pending')}
-          className="h-4 w-4 rounded border-gray-300 text-blue-600 cursor-pointer"
+          className="h-4 w-4 rounded border-app-border text-app-accent cursor-pointer"
           onClick={(e) => e.stopPropagation()}
         />
 
         {/* Label + activate */}
         <button
-          className="flex-1 text-left text-sm font-medium text-gray-800 hover:text-blue-600"
+          className="flex-1 text-left text-sm font-medium text-app-high hover:text-app-accent transition-colors"
           onClick={() => setActiveMoment(moment.id)}
         >
           {moment.label}
@@ -57,7 +57,7 @@ export function MomentCard({ moment, isActive }: MomentCardProps) {
       {isActive && moment.hardwareInstructions && (
         <div className="mt-2 space-y-1">
           {moment.hardwareInstructions.map((inst, i) => (
-            <div key={i} className="flex items-start gap-1.5 text-xs text-orange-700 bg-orange-50 rounded px-2 py-1">
+            <div key={i} className="flex items-start gap-1.5 text-xs text-app-accent bg-app-accent/10 rounded px-2 py-1">
               <span>🔧</span>
               <span>{inst}</span>
             </div>
@@ -84,7 +84,6 @@ function ActionButton({ action, moment }: { action: Moment['softwareActions'][0]
       const sceneName = cfg.scenes[action.scene as keyof typeof cfg.scenes] ?? action.scene
       await window.electronAPI.obs.switchScene(sceneName)
     } else if (action.type === 'open-hymn') {
-      // Opens HymnSelector — handled by parent panel via event / store
       document.dispatchEvent(new CustomEvent('open-hymn-selector'))
     } else if (action.type === 'stop-stream') {
       await window.electronAPI.obs.stopStream()
@@ -102,9 +101,9 @@ function ActionButton({ action, moment }: { action: Moment['softwareActions'][0]
   }
 
   const LABELS: Record<string, string> = {
-    'set-scene':  `Cena: ${action.scene ?? ''}`,
-    'open-hymn':  'Abrir Hino',
-    'open-file':  'Abrir Ficheiro',
+    'set-scene':   `Cena: ${action.scene ?? ''}`,
+    'open-hymn':   'Abrir Hino',
+    'open-file':   'Abrir Ficheiro',
     'stop-stream': 'Parar Stream',
     'start-stream':'Iniciar Stream',
   }
@@ -112,7 +111,7 @@ function ActionButton({ action, moment }: { action: Moment['softwareActions'][0]
   return (
     <button
       onClick={handleClick}
-      className="px-2.5 py-1 rounded text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition-colors"
+      className="px-2.5 py-1 rounded text-xs bg-app-border hover:bg-app-surface text-app-mid border border-app-border transition-colors"
     >
       {LABELS[action.type] ?? action.type}
     </button>
