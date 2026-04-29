@@ -22,7 +22,7 @@ export function ChatPanel() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-app-border bg-app-surface">
         <div>
-          <h2 className="font-semibold text-app-high text-sm">iTitus AI</h2>
+          <h2 className="font-semibold text-app-high text-sm">Titus</h2>
           <p className="text-xs text-app-low">Fala em português</p>
         </div>
         <button
@@ -52,7 +52,7 @@ export function ChatPanel() {
             <div
               className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
                 msg.role === 'user'
-                  ? 'bg-app-accent text-app-deep rounded-br-sm'
+                  ? 'bg-app-accent text-app-on-accent rounded-br-sm'
                   : msg.isError
                     ? 'bg-red-900/30 text-red-400 border border-red-800 rounded-bl-sm'
                     : 'bg-app-surface text-app-high border border-app-border rounded-bl-sm'
@@ -61,7 +61,7 @@ export function ChatPanel() {
               <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
               {msg.actionTaken && (
                 <span className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full ${
-                  msg.role === 'user' ? 'bg-app-accent-dim text-app-deep' : 'bg-app-border text-app-mid'
+                  msg.role === 'user' ? 'bg-app-accent-dim text-app-on-accent' : 'bg-app-border text-app-mid'
                 }`}>
                   ⚡ {msg.actionTaken}
                 </span>
@@ -101,7 +101,7 @@ export function ChatPanel() {
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg disabled:opacity-50 transition-colors self-end"
+            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg disabled:opacity-50 transition-colors self-end"
           >
             ↑
           </button>

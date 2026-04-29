@@ -91,7 +91,7 @@ export function QuickActionsPanel() {
           <button
             onClick={openHymn}
             disabled={hymnLoading || !hymnNumber}
-            className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
+            className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
           >
             {hymnLoading ? '...' : 'Abrir'}
           </button>

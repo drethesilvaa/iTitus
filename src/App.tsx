@@ -33,6 +33,15 @@ export default function App() {
     loadConfig()
   }, [loadConfig])
 
+  // Apply theme class to <html>
+  useEffect(() => {
+    if (config?.theme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [config?.theme])
+
   // Global keyboard shortcut: Ctrl+Shift+S → Panic
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.ctrlKey && e.shiftKey && e.key === 'S') {

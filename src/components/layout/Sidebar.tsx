@@ -1,4 +1,5 @@
 import type { TabId } from '../../App'
+import { useSettingsStore } from '../../store/settings.store'
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: 'culto',      label: 'Culto',      icon: '⛪' },
@@ -14,6 +15,9 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
+  const { config, updateConfig } = useSettingsStore()
+  const isDark = config?.theme === 'dark'
+
   return (
     <aside className="flex flex-col bg-app-deep border-r border-app-border py-4">
       <div className="px-4 mb-6">
@@ -28,7 +32,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
             onClick={() => onTabChange(tab.id)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full
               ${activeTab === tab.id
-                ? 'bg-app-accent text-app-deep'
+                ? 'bg-app-accent text-app-on-accent'
                 : 'text-app-mid hover:bg-app-surface hover:text-app-high'
               }`}
           >
@@ -38,8 +42,18 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
         ))}
       </nav>
 
-      {/* Panic Button */}
-      <div className="mt-auto px-2">
+      <div className="mt-auto px-2 flex flex-col gap-2">
+        {/* Theme toggle */}
+        <button
+          onClick={() => updateConfig('theme', isDark ? 'light' : 'dark')}
+          title={isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
+          className="w-full px-3 py-2 rounded-lg border border-app-border text-app-mid hover:bg-app-surface hover:text-app-high transition-colors text-sm flex items-center gap-2"
+        >
+          <span>{isDark ? '☀' : '🌙'}</span>
+          <span>{isDark ? 'Modo claro' : 'Modo escuro'}</span>
+        </button>
+
+        {/* Panic Button */}
         <button
           onClick={() => window.electronAPI.app.panic()}
           className="w-full px-3 py-2.5 rounded-lg bg-red-700 hover:bg-red-600 text-app-high text-sm font-bold transition-colors"

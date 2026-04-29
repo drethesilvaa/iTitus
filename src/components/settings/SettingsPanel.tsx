@@ -45,7 +45,7 @@ function LoginGate({ onUnlock }: { onUnlock: () => void }) {
           {error && <p className="text-red-400 text-xs">Credenciais inválidas</p>}
           <button
             onClick={attempt}
-            className="w-full py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium transition-colors"
+            className="w-full py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg text-sm font-medium transition-colors"
           >
             Entrar
           </button>
@@ -146,7 +146,7 @@ function OBSSettings({ config, update, obs }: any) {
         <button
           onClick={test}
           disabled={testing}
-          className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
         >
           {testing ? 'A ligar...' : 'Testar ligação'}
         </button>
@@ -256,7 +256,7 @@ function AISettings({ config, update }: any) {
           <button
             onClick={saveKey}
             disabled={!apiKey || saving}
-            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg text-sm disabled:opacity-50 transition-colors"
+            className="px-3 py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg text-sm disabled:opacity-50 transition-colors"
           >
             {saving ? '...' : 'Guardar'}
           </button>
