@@ -123,6 +123,7 @@ export interface ElectronAPI {
     panic: () => Promise<void>
     onUpdateAvailable: (cb: (version: string) => void) => () => void
     onUpdateReady: (cb: () => void) => () => void
+    installUpdate: () => Promise<void>
   }
   youtube: {
     authenticate: (clientId: string, clientSecret: string) => Promise<void>

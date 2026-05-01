@@ -13,6 +13,39 @@ import { useSettingsStore } from './store/settings.store'
 
 export type TabId = 'culto' | 'acoes' | 'downloads' | 'instrucoes' | 'config'
 
+function UpdateBanner() {
+  const [available, setAvailable] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    const off1 = window.electronAPI.app.onUpdateAvailable(v => setAvailable(v))
+    const off2 = window.electronAPI.app.onUpdateReady(() => setReady(true))
+    return () => { off1(); off2() }
+  }, [])
+
+  if (!available) return null
+
+  return (
+    <div className={`flex items-center justify-between px-4 py-2 text-sm font-medium ${
+      ready ? 'bg-green-800 text-green-100' : 'bg-yellow-700 text-yellow-100'
+    }`}>
+      <span>
+        {ready
+          ? '✓ Atualização pronta para instalar'
+          : `⬆ Versão ${available} disponível — a transferir...`}
+      </span>
+      {ready && (
+        <button
+          onClick={() => window.electronAPI.app.installUpdate()}
+          className="ml-4 px-3 py-1 rounded bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition-colors"
+        >
+          Reiniciar e instalar
+        </button>
+      )}
+    </div>
+  )
+}
+
 const PANELS: Record<TabId, React.ReactNode> = {
   culto:      <RunbookPanel />,
   acoes:      <QuickActionsPanel />,
@@ -64,6 +97,7 @@ export default function App() {
 
       {/* Main content */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <UpdateBanner />
         <StatusBar />
         <main className="flex-1 overflow-hidden">
           {PANELS[activeTab]}

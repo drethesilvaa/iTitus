@@ -55,6 +55,7 @@ export const IPC = {
     PANIC:    'app:panic',
     ON_UPDATE_AVAILABLE: 'app:update-available',
     ON_UPDATE_READY:     'app:update-ready',
+    INSTALL_UPDATE:      'app:install-update',
   },
   YOUTUBE: {
     AUTHENTICATE:      'yt:authenticate',

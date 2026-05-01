@@ -65,6 +65,7 @@ const api: ElectronAPI = {
     panic:    ()  => ipcRenderer.invoke(IPC.APP.PANIC),
     onUpdateAvailable: (cb) => on(IPC.APP.ON_UPDATE_AVAILABLE, cb as (...args: unknown[]) => void),
     onUpdateReady:     (cb) => on(IPC.APP.ON_UPDATE_READY,     cb as (...args: unknown[]) => void),
+    installUpdate:     ()  => ipcRenderer.invoke(IPC.APP.INSTALL_UPDATE),
   },
   youtube: {
     authenticate:    (clientId, clientSecret) => ipcRenderer.invoke(IPC.YOUTUBE.AUTHENTICATE, clientId, clientSecret),

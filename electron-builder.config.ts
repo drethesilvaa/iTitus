@@ -26,6 +26,13 @@ const config: Configuration = {
     language: '2070',
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
+    runAfterFinish: false,
+  },
+  publish: {
+    provider: 'github',
+    owner: 'drethesilvaa',
+    repo: 'iTitus',
+    releaseType: 'release',
   },
 }
 

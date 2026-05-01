@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Moment } from '../../types/runbook.types'
 import { StatusBadge } from './MomentBadge'
 import { useRunbookStore } from '../../store/runbook.store'
@@ -78,13 +79,34 @@ export function MomentCard({ moment, isActive }: MomentCardProps) {
 }
 
 function ActionButton({ action, moment }: { action: Moment['softwareActions'][0]; moment: Moment }) {
+  const [showHymnInput, setShowHymnInput] = useState(false)
+  const [hymnNum, setHymnNum] = useState('')
+  const [isValid, setIsValid] = useState(true)
+
+  const handleHymnConfirm = async () => {
+    const n = Number(hymnNum)
+    if (Number.isInteger(n) && n >= 1 && n <= 695) {
+      setIsValid(true)
+      const cfg = await window.electronAPI.config.getAll()
+      const padded = String(n).padStart(3, '0')
+      const path = `${cfg.hymnBasePath}\\${padded}.${cfg.hymnExtension}`
+      await window.electronAPI.vlc.play(path, cfg.vlcScreenIndex)
+      setShowHymnInput(false)
+      setHymnNum('')
+    } else {
+      setIsValid(false)
+    }
+  }
+
+  const cancelHymn = () => { setShowHymnInput(false); setHymnNum(''); setIsValid(true) }
+
   const handleClick = async () => {
     if (action.type === 'set-scene' && action.scene) {
       const cfg = await window.electronAPI.config.getAll()
       const sceneName = cfg.scenes[action.scene as keyof typeof cfg.scenes] ?? action.scene
       await window.electronAPI.obs.switchScene(sceneName)
     } else if (action.type === 'open-hymn') {
-      document.dispatchEvent(new CustomEvent('open-hymn-selector'))
+      setShowHymnInput(true)
     } else if (action.type === 'stop-stream') {
       await window.electronAPI.obs.stopStream()
     } else if (action.type === 'open-file') {
@@ -96,8 +118,42 @@ function ActionButton({ action, moment }: { action: Moment['softwareActions'][0]
           { name: 'Todos', extensions: ['*'] },
         ],
       })
-      if (file) await window.electronAPI.files.openPath(file)
+      if (!file) return
+      const ext = file.split('.').pop()?.toLowerCase() ?? ''
+      const VIDEO_EXTS = ['mp4', 'mkv', 'avi', 'mov']
+      if (VIDEO_EXTS.includes(ext)) {
+        const cfg = await window.electronAPI.config.getAll()
+        await window.electronAPI.vlc.play(file, cfg.vlcScreenIndex)
+      } else {
+        await window.electronAPI.files.openPath(file)
+      }
     }
+  }
+
+  if (action.type === 'open-hymn' && showHymnInput) {
+    return (
+      <>
+        <input
+          type="number"
+          min={1}
+          max={695}
+          autoFocus
+          value={hymnNum}
+          onChange={e => { setHymnNum(e.target.value); setIsValid(true) }}
+          onKeyDown={e => { if (e.key === 'Enter') handleHymnConfirm(); if (e.key === 'Escape') cancelHymn() }}
+          placeholder="Nº 1–695"
+          className={`w-24 px-2 py-1 rounded text-xs bg-app-surface text-app-high border border-app-border focus:outline-none ${!isValid ? 'ring-2 ring-red-500' : 'focus:ring-2 focus:ring-app-accent/50'}`}
+        />
+        <button
+          onClick={handleHymnConfirm}
+          className="px-2.5 py-1 rounded text-xs bg-app-accent hover:bg-app-accent-hover text-app-on-accent border border-app-accent transition-colors"
+        >▶ OK</button>
+        <button
+          onClick={cancelHymn}
+          className="px-2 py-1 rounded text-xs bg-app-border hover:bg-app-surface text-app-mid border border-app-border transition-colors"
+        >✕</button>
+      </>
+    )
   }
 
   const LABELS: Record<string, string> = {
