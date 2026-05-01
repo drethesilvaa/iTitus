@@ -1,5 +1,6 @@
 {
   "name": "iasd-paivas-multimedia",
+  "productName": "iTitus",
   "version": "1.1.0",
   "description": "Assistente multimédia IASD Paivas",
   "main": "out/main/main.mjs",
