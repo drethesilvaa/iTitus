@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, screen } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import updaterPkg from 'electron-updater'
+const { autoUpdater } = updaterPkg
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { IPC } from '../shared/ipc-channels.js'
@@ -38,7 +39,9 @@ function createWindow(): void {
     minWidth: 1024,
     minHeight: 700,
     title: 'iTitus — IASD Paivas',
-    icon: path.join(process.cwd(), 'assets/icon.ico'),
+    icon: app.isPackaged
+      ? path.join(process.resourcesPath, 'icon.ico')
+      : path.join(__dirname, '../../assets/icon.ico'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

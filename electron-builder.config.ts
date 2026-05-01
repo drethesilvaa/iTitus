@@ -2,7 +2,7 @@ import type { Configuration } from 'electron-builder'
 
 const config: Configuration = {
   appId: 'pt.adventistas.paivas.multimedia',
-  productName: 'iTitus IASD Paivas',
+  productName: 'iTitus',
   copyright: 'IASD Paivas',
   directories: {
     output: 'release',
@@ -14,6 +14,7 @@ const config: Configuration = {
   extraResources: [
     { from: 'resources/yt-dlp.exe',  to: 'yt-dlp.exe'  },
     { from: 'resources/ffmpeg.exe',  to: 'ffmpeg.exe'   },
+    { from: 'assets/icon.ico',       to: 'icon.ico'     },
   ],
   win: {
     target: [{ target: 'nsis', arch: ['x64'] }],
@@ -27,6 +28,8 @@ const config: Configuration = {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     runAfterFinish: false,
+    installerSidebar: 'assets/installer-sidebar.bmp',
+    installerHeader: 'assets/installer-header.bmp',
   },
   publish: {
     provider: 'github',
