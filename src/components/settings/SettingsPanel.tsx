@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSettingsStore } from '../../store/settings.store'
 import { useOBS } from '../../hooks/useOBS'
 
-type SettingsTab = 'obs' | 'paths' | 'ai' | 'scraper'
+type SettingsTab = 'obs' | 'paths' | 'ai' | 'scraper' | 'youtube'
 
 function LoginGate({ onUnlock }: { onUnlock: () => void }) {
   const [user, setUser] = useState('')
@@ -64,10 +64,11 @@ export function SettingsPanel() {
   if (!config) return <div className="p-4 text-app-low text-sm">A carregar definições...</div>
 
   const tabs: { id: SettingsTab; label: string }[] = [
-    { id: 'obs',    label: 'OBS' },
-    { id: 'paths',  label: 'Caminhos' },
-    { id: 'ai',     label: 'iTitus AI' },
-    { id: 'scraper',label: 'Recursos Web' },
+    { id: 'obs',     label: 'OBS' },
+    { id: 'paths',   label: 'Caminhos' },
+    { id: 'ai',      label: 'iTitus AI' },
+    { id: 'scraper', label: 'Recursos Web' },
+    { id: 'youtube', label: 'YouTube' },
   ]
 
   return (
@@ -91,7 +92,8 @@ export function SettingsPanel() {
         {tab === 'obs'    && <OBSSettings config={config} update={updateConfig} obs={obs} />}
         {tab === 'paths'  && <PathsSettings config={config} update={updateConfig} />}
         {tab === 'ai'     && (aiUnlocked ? <AISettings config={config} update={updateConfig} /> : <LoginGate onUnlock={() => setAiUnlocked(true)} />)}
-        {tab === 'scraper'&& <ScraperSettings config={config} update={updateConfig} />}
+        {tab === 'scraper' && <ScraperSettings config={config} update={updateConfig} />}
+        {tab === 'youtube' && <YouTubeSettings config={config} update={updateConfig} />}
       </div>
     </div>
   )
@@ -296,6 +298,93 @@ function ScraperSettings({ config, update }: any) {
       <Field label="Vídeo Mordomia">
         <input type="url" value={config.scraperMordomiaUrl} onChange={e => update('scraperMordomiaUrl', e.target.value)} className={inputClass} />
       </Field>
+    </div>
+  )
+}
+
+// ── YouTube Settings ─────────────────────────────────────────
+function YouTubeSettings({ config, update }: any) {
+  const [status, setStatus] = useState<{ connected: boolean; email: string | null } | null>(null)
+  const [connecting, setConnecting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    window.electronAPI.youtube.getAuthStatus().then(setStatus)
+  }, [])
+
+  const connect = async () => {
+    if (!config.youtubeClientId || !config.youtubeClientSecret) {
+      setError('Preenche o Client ID e Client Secret antes de ligar.')
+      return
+    }
+    setConnecting(true)
+    setError(null)
+    try {
+      await window.electronAPI.youtube.authenticate(config.youtubeClientId, config.youtubeClientSecret)
+      const s = await window.electronAPI.youtube.getAuthStatus()
+      setStatus(s)
+    } catch (e) {
+      setError(String(e))
+    } finally {
+      setConnecting(false)
+    }
+  }
+
+  const disconnect = async () => {
+    await window.electronAPI.youtube.disconnect()
+    setStatus({ connected: false, email: null })
+  }
+
+  return (
+    <div className="space-y-4 max-w-md">
+      <h3 className="font-semibold text-app-high">YouTube Data API</h3>
+      <p className="text-xs text-app-low leading-relaxed">
+        Cria as credenciais em <span className="text-app-mid font-mono">console.cloud.google.com</span> →
+        Credenciais → OAuth 2.0 → Aplicação de ambiente de trabalho.
+        Ativa a <span className="text-app-mid">YouTube Data API v3</span> no mesmo projeto.
+      </p>
+
+      <Field label="Client ID">
+        <input
+          type="text"
+          value={config.youtubeClientId}
+          onChange={e => update('youtubeClientId', e.target.value)}
+          placeholder="*.apps.googleusercontent.com"
+          className={inputClass}
+        />
+      </Field>
+      <Field label="Client Secret">
+        <input
+          type="password"
+          value={config.youtubeClientSecret}
+          onChange={e => update('youtubeClientSecret', e.target.value)}
+          placeholder="GOCSPX-..."
+          className={inputClass}
+        />
+      </Field>
+
+      <div className="space-y-2 pt-1">
+        {status?.connected ? (
+          <>
+            <p className="text-xs text-green-400">✓ Ligado como {status.email}</p>
+            <button
+              onClick={disconnect}
+              className="px-4 py-2 border border-red-800 text-red-400 hover:bg-red-900/20 rounded-lg text-sm transition-colors"
+            >
+              Desligar conta
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={connect}
+            disabled={connecting}
+            className="px-4 py-2 bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg text-sm font-medium disabled:opacity-50 transition-colors"
+          >
+            {connecting ? 'A abrir browser...' : 'Ligar conta Google'}
+          </button>
+        )}
+        {error && <p className="text-xs text-red-400">{error}</p>}
+      </div>
     </div>
   )
 }

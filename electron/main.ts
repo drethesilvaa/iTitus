@@ -18,6 +18,7 @@ import { registerAIHandlers } from './ipc/ai.ipc.js'
 import { registerConfigHandlers } from './ipc/config.ipc.js'
 import { registerFilesHandlers } from './ipc/files.ipc.js'
 import { registerLoggerHandlers } from './ipc/logger.ipc.js'
+import { registerYouTubeHandlers } from './ipc/youtube.ipc.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -66,6 +67,7 @@ app.whenReady().then(() => {
   registerConfigHandlers()
   registerFilesHandlers(win)
   registerLoggerHandlers()
+  registerYouTubeHandlers()
 
   // App-level IPC
   ipcMain.handle(IPC.APP.VERSION,  () => app.getVersion())

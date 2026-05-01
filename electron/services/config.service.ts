@@ -30,6 +30,8 @@ const defaults: AppConfig = {
     boletim:  null,
     mordomia: null,
   },
+  youtubeClientId:     '',
+  youtubeClientSecret: '',
 }
 
 export const configStore = new Store<AppConfig>({

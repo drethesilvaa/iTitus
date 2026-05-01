@@ -66,6 +66,14 @@ const api: ElectronAPI = {
     onUpdateAvailable: (cb) => on(IPC.APP.ON_UPDATE_AVAILABLE, cb as (...args: unknown[]) => void),
     onUpdateReady:     (cb) => on(IPC.APP.ON_UPDATE_READY,     cb as (...args: unknown[]) => void),
   },
+  youtube: {
+    authenticate:    (clientId, clientSecret) => ipcRenderer.invoke(IPC.YOUTUBE.AUTHENTICATE, clientId, clientSecret),
+    disconnect:      ()                        => ipcRenderer.invoke(IPC.YOUTUBE.DISCONNECT),
+    getAuthStatus:   ()                        => ipcRenderer.invoke(IPC.YOUTUBE.GET_AUTH_STATUS),
+    listBroadcasts:  ()                        => ipcRenderer.invoke(IPC.YOUTUBE.LIST_BROADCASTS),
+    updateBroadcast: (id, metadata)            => ipcRenderer.invoke(IPC.YOUTUBE.UPDATE_BROADCAST, id, metadata),
+    setThumbnail:    (broadcastId, filePath)   => ipcRenderer.invoke(IPC.YOUTUBE.SET_THUMBNAIL, broadcastId, filePath),
+  },
 }
 
 contextBridge.exposeInMainWorld('electronAPI', api)

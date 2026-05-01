@@ -56,4 +56,12 @@ export const IPC = {
     ON_UPDATE_AVAILABLE: 'app:update-available',
     ON_UPDATE_READY:     'app:update-ready',
   },
+  YOUTUBE: {
+    AUTHENTICATE:      'yt:authenticate',
+    DISCONNECT:        'yt:disconnect',
+    GET_AUTH_STATUS:   'yt:get-auth-status',
+    LIST_BROADCASTS:   'yt:list-broadcasts',
+    UPDATE_BROADCAST:  'yt:update-broadcast',
+    SET_THUMBNAIL:     'yt:set-thumbnail',
+  },
 } as const
