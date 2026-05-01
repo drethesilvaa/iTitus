@@ -21,37 +21,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Build app + package into unsigned installer (do not publish yet)
       - name: Build
         run: npx electron-vite build
 
-      - name: Package (unsigned)
-        run: npx electron-builder --publish never
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ── SignPath signing ──────────────────────────────────────────────────────
-      # Uncomment when SignPath Foundation account is approved and secrets are set:
-      #   SIGNPATH_API_TOKEN   → Settings → Secrets → Actions
-      #   SIGNPATH_ORG_ID      → your SignPath organization ID
-      #
-      # IMPORTANT: after signing, recompute SHA512 in latest.yml so electron-updater
-      # accepts the download. See: https://www.electron.build/auto-update#staged-rollouts
-      #
-      # - name: Sign via SignPath
-      #   uses: SignPath/github-action-submit-signing-request@v1
-      #   with:
-      #     api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-      #     organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
-      #     project-slug: iTitus
-      #     signing-policy-slug: release-signing
-      #     artifact-configuration-slug: windows-installer
-      #     input-artifact-path: release/
-      #     output-artifact-path: release/
-      # ─────────────────────────────────────────────────────────────────────────
-
-      # Publish packaged artifacts to GitHub Releases
-      - name: Publish to GitHub Releases
-        run: npx electron-builder --publish always --prepackaged release/
+      # Build installer and publish to GitHub Releases in one step.
+      # When code signing is needed, split into:
+      #   1. npx electron-builder --publish never  (produces release/)
+      #   2. sign release/ artifacts
+      #   3. npx electron-builder --publish always --prepackaged release/
+      # and recompute SHA512 in latest.yml after signing.
+      - name: Package and Publish
+        run: npx electron-builder --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
