@@ -19,6 +19,7 @@ const config: Configuration = {
   win: {
     target: [{ target: 'nsis', arch: ['x64'] }],
     icon: 'assets/icon.ico',
+    artifactName: '${productName} Setup ${version}.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -28,8 +29,8 @@ const config: Configuration = {
     createDesktopShortcut: true,
     createStartMenuShortcut: true,
     runAfterFinish: false,
-    installerSidebar: 'assets/installer-sidebar.bmp',
-    installerHeader: 'assets/installer-header.bmp',
+    installerSidebar: 'installer-sidebar.bmp',
+    installerHeader: 'installer-header.bmp',
   },
   publish: {
     provider: 'github',
