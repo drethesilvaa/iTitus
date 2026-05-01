@@ -16,10 +16,10 @@ const config: Configuration = {
     { from: 'resources/ffmpeg.exe',  to: 'ffmpeg.exe'   },
     { from: 'assets/icon.ico',       to: 'icon.ico'     },
   ],
+  artifactName: '${productName} Setup ${version}.${ext}',
   win: {
     target: [{ target: 'nsis', arch: ['x64'] }],
-    icon: 'assets/icon.ico',
-    artifactName: '${productName} Setup ${version}.${ext}',
+    icon: 'icon.ico',
   },
   nsis: {
     oneClick: false,
