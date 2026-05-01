@@ -112,7 +112,7 @@ export function OnboardingOverlay() {
             )}
             <button
               onClick={next}
-              className="px-5 py-2 text-sm bg-app-accent hover:bg-app-accent-hover text-app-deep rounded-lg font-medium transition-colors"
+              className="px-5 py-2 text-sm bg-app-accent hover:bg-app-accent-hover text-app-on-accent rounded-lg font-medium transition-colors"
             >
               {isLast ? "Começar" : "Próximo"}
             </button>

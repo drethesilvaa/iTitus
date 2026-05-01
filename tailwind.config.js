@@ -5,16 +5,17 @@ module.exports = {
     extend: {
       colors: {
         app: {
-          deep:           '#0E0D0B',
-          base:           '#1A1C20',
-          surface:        '#252421',
-          border:         '#353230',
-          high:           '#F0EDE6',
-          mid:            '#9E9A94',
-          low:            '#5C5956',
-          accent:         '#E8982A',
-          'accent-hover': '#F0A840',
-          'accent-dim':   '#C97C0E',
+          deep:           'rgb(var(--app-deep) / <alpha-value>)',
+          base:           'rgb(var(--app-base) / <alpha-value>)',
+          surface:        'rgb(var(--app-surface) / <alpha-value>)',
+          border:         'rgb(var(--app-border) / <alpha-value>)',
+          high:           'rgb(var(--app-high) / <alpha-value>)',
+          mid:            'rgb(var(--app-mid) / <alpha-value>)',
+          low:            'rgb(var(--app-low) / <alpha-value>)',
+          accent:         'rgb(var(--app-accent) / <alpha-value>)',
+          'accent-hover': 'rgb(var(--app-accent-hover) / <alpha-value>)',
+          'accent-dim':   'rgb(var(--app-accent-dim) / <alpha-value>)',
+          'on-accent':    'rgb(var(--app-on-accent) / <alpha-value>)',
         },
       },
       fontFamily: {

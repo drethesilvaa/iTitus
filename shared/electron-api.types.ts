@@ -26,6 +26,16 @@ export interface AIChatResult {
   actionTaken: string | null
 }
 
+export interface YoutubeBroadcast {
+  id: string
+  title: string
+  description: string
+  thumbnailUrl: string
+  status: 'created' | 'ready' | 'testing' | 'live' | 'complete' | 'revoked'
+  madeForKids: boolean
+  scheduledStartTime: string
+}
+
 export interface AppConfig {
   obsHost: string
   obsPort: number
@@ -52,6 +62,8 @@ export interface AppConfig {
     boletim: { items: ScraperResource[]; fetchedAt: number } | null
     mordomia: { items: ScraperResource[]; fetchedAt: number } | null
   }
+  youtubeClientId: string
+  youtubeClientSecret: string
 }
 
 export interface ElectronAPI {
@@ -111,5 +123,14 @@ export interface ElectronAPI {
     panic: () => Promise<void>
     onUpdateAvailable: (cb: (version: string) => void) => () => void
     onUpdateReady: (cb: () => void) => () => void
+    installUpdate: () => Promise<void>
+  }
+  youtube: {
+    authenticate: (clientId: string, clientSecret: string) => Promise<void>
+    disconnect: () => Promise<void>
+    getAuthStatus: () => Promise<{ connected: boolean; email: string | null }>
+    listBroadcasts: () => Promise<YoutubeBroadcast[]>
+    updateBroadcast: (id: string, metadata: { title?: string; description?: string; madeForKids?: boolean }) => Promise<void>
+    setThumbnail: (broadcastId: string, filePath: string) => Promise<void>
   }
 }

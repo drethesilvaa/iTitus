@@ -33,7 +33,7 @@ const SECTIONS = [
   },
   {
     icon: '🤖',
-    title: 'Assistente AI',
+    title: 'Assistente Titus',
     content: [
       'O chat fica sempre visível à direita, em qualquer ecrã.',
       'Escreve em português normal, por exemplo:',

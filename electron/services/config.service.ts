@@ -16,7 +16,7 @@ const defaults: AppConfig = {
   openRouterModel:  'google/gemini-2.0-flash-001',
   hymnBasePath:     '',
   hymnExtension:    'mp4',
-  theme:            'light',
+  theme:            'dark',
   onboardingDone:   false,
   scraperBoletimUrl:  'https://recursos.adventistas.org.pt/escolasabatina/videos/',
   scraperMordomiaUrl: 'https://recursos.adventistas.org.pt/mordomia/videos/',
@@ -30,6 +30,8 @@ const defaults: AppConfig = {
     boletim:  null,
     mordomia: null,
   },
+  youtubeClientId:     '',
+  youtubeClientSecret: '',
 }
 
 export const configStore = new Store<AppConfig>({

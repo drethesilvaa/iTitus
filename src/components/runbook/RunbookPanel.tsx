@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { useRunbookStore } from '../../store/runbook.store'
 import { MomentCard } from './MomentCard'
+import { RunbookEditorModal } from './RunbookEditorModal'
 
 export function RunbookPanel() {
   const { moments, activeMomentId, resetRunbook } = useRunbookStore()
+  const [editing, setEditing] = useState(false)
 
   const escola = moments.filter(m => m.category === 'escola')
   const culto  = moments.filter(m => m.category === 'culto')
@@ -10,18 +13,24 @@ export function RunbookPanel() {
 
   return (
     <div className="h-full flex flex-col">
+      {editing && <RunbookEditorModal onClose={() => setEditing(false)} />}
+
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-app-border">
         <div>
           <h2 className="font-semibold text-app-high">Programa do Culto</h2>
           <p className="text-xs text-app-low">{done}/{moments.length} momentos concluídos</p>
         </div>
-        <button
-          onClick={() => { if (confirm('Reiniciar programa?')) resetRunbook() }}
-          className="px-3 py-1.5 text-xs rounded border border-app-border hover:bg-app-surface text-app-mid transition-colors"
-        >
-          Reiniciar
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setEditing(true)}
+            className="px-3 py-1.5 text-xs rounded border border-app-border hover:bg-app-surface text-app-mid transition-colors"
+          >Editar</button>
+          <button
+            onClick={() => { if (confirm('Reiniciar programa?')) resetRunbook() }}
+            className="px-3 py-1.5 text-xs rounded border border-app-border hover:bg-app-surface text-app-mid transition-colors"
+          >Reiniciar</button>
+        </div>
       </div>
 
       {/* Scrollable moment list */}

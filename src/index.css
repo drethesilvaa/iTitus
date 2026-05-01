@@ -2,6 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light mode (default) ── */
+:root {
+  --app-deep:           226 221 214;   /* #E2DDD6 — sidebar/statusbar tint */
+  --app-base:           247 245 241;   /* #F7F5F1 */
+  --app-surface:        255 255 255;   /* #FFFFFF */
+  --app-border:         226 221 214;   /* #E2DDD6 */
+  --app-high:           26 28 32;      /* #1A1C20 */
+  --app-mid:            92 89 86;      /* #5C5956 */
+  --app-low:            158 154 148;   /* #9E9A94 */
+  --app-accent:         181 108 8;     /* #B56C08 */
+  --app-accent-hover:   154 92 6;      /* #9A5C06 */
+  --app-accent-dim:     201 124 14;    /* #C97C0E */
+  --app-on-accent:      26 28 32;      /* #1A1C20 — dark text on amber */
+  --scrollbar-thumb:    226 221 214;
+  --scrollbar-hover:    158 154 148;
+}
+
+/* ── Dark mode ── */
+.dark {
+  --app-deep:           14 13 11;      /* #0E0D0B */
+  --app-base:           26 28 32;      /* #1A1C20 */
+  --app-surface:        37 36 33;      /* #252421 */
+  --app-border:         53 50 48;      /* #353230 */
+  --app-high:           240 237 230;   /* #F0EDE6 */
+  --app-mid:            158 154 148;   /* #9E9A94 */
+  --app-low:            92 89 86;      /* #5C5956 */
+  --app-accent:         232 152 42;    /* #E8982A */
+  --app-accent-hover:   240 168 64;    /* #F0A840 */
+  --app-accent-dim:     201 124 14;    /* #C97C0E */
+  --app-on-accent:      14 13 11;      /* #0E0D0B — very dark text on amber */
+  --scrollbar-thumb:    53 50 48;
+  --scrollbar-hover:    92 89 86;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -28,10 +62,10 @@ input, textarea, select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #353230;
+  background: rgb(var(--scrollbar-thumb));
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5C5956;
+  background: rgb(var(--scrollbar-hover));
 }

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, screen } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { IPC } from '../shared/ipc-channels.js'
@@ -18,6 +19,7 @@ import { registerAIHandlers } from './ipc/ai.ipc.js'
 import { registerConfigHandlers } from './ipc/config.ipc.js'
 import { registerFilesHandlers } from './ipc/files.ipc.js'
 import { registerLoggerHandlers } from './ipc/logger.ipc.js'
+import { registerYouTubeHandlers } from './ipc/youtube.ipc.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -66,6 +68,7 @@ app.whenReady().then(() => {
   registerConfigHandlers()
   registerFilesHandlers(win)
   registerLoggerHandlers()
+  registerYouTubeHandlers()
 
   // App-level IPC
   ipcMain.handle(IPC.APP.VERSION,  () => app.getVersion())
@@ -96,6 +99,23 @@ app.whenReady().then(() => {
     const pass = configStore.get('obsPassword')
     obsService.connect(host, port, pass).catch(err =>
       logger.error(`Auto-connect OBS falhou: ${err}`)
+    )
+  }
+
+  // Auto-updater (production only — never runs in npm run dev)
+  if (app.isPackaged) {
+    ipcMain.handle(IPC.APP.INSTALL_UPDATE, () => autoUpdater.quitAndInstall())
+
+    autoUpdater.on('update-available', (info) => {
+      win?.webContents.send(IPC.APP.ON_UPDATE_AVAILABLE, info.version)
+    })
+
+    autoUpdater.on('update-downloaded', () => {
+      win?.webContents.send(IPC.APP.ON_UPDATE_READY)
+    })
+
+    autoUpdater.checkForUpdates().catch(err =>
+      logger.error(`Verificação de atualização falhou: ${err}`)
     )
   }
 
